@@ -27,8 +27,8 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
         with:
-          # The integration token cannot call the Pages API. This job's
-          # token has pages:write and can create the site on first run.
+          # Pages is configured in the repo (build type: workflow).
+          # enablement covers a missing site; an existing site is left as-is.
           enablement: true
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
