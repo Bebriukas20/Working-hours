@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Work Hours</title>
+<meta name="description" content="Simple personal work-hours tracker. Data stays on this device.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Work Hours">
+<meta name="format-detection" content="telephone=no">
+<meta name="theme-color" content="#f4f5f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111214" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top">
+  <h1>Work Hours</h1>
+  <button id="menuBtn" class="icon-btn" aria-label="Backup and settings">⋯</button>
+</header>
+
+<main>
+  <button id="addBtn" class="btn big primary">+ Add hours</button>
+  <button id="exportBtn" class="btn wide export">Export PDF</button>
+  <section id="list" class="list"></section>
+  <p id="empty" class="empty muted" hidden>No hours yet. Tap “+ Add hours”.</p>
+</main>
+
+<!-- Entry dialog -->
+<dialog id="entryDlg">
+  <form id="entryForm" method="dialog" novalidate>
+    <h2 id="entryTitle" tabindex="-1">Add hours</h2>
+    <label>Date <span id="dateFmt" class="muted small"></span>
+      <input type="text" id="fDate" class="mask-date" inputmode="numeric" placeholder="DD.MM.YYYY" maxlength="10" autocomplete="off" required>
+    </label>
+    <div class="chips"><button type="button" class="chip" data-days="0">Today</button><button type="button" class="chip" data-days="-1">Yesterday</button></div>
+    <div class="row2">
+      <label>Start
+        <input type="text" id="fStart" class="mask-time" inputmode="numeric" placeholder="HH:MM" maxlength="5" autocomplete="off" required>
+      </label>
+      <label>End
+        <input type="text" id="fEnd" class="mask-time" inputmode="numeric" placeholder="HH:MM" maxlength="5" autocomplete="off" required>
+      </label>
+    </div>
+    <div id="calc" class="calc"></div>
+    <div class="dlg-actions">
+      <button type="button" id="delBtn" class="btn danger" hidden>Delete</button>
+      <span class="spacer"></span>
+      <button type="button" id="cancelEntry" class="btn">Cancel</button>
+      <button type="submit" id="saveEntry" class="btn primary">Save</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Export dialog -->
+<dialog id="exportDlg">
+  <form id="exportForm" method="dialog">
+    <h2 tabindex="-1" autofocus>Export PDF</h2>
+    <div class="seg" role="tablist">
+      <button type="button" class="seg-btn active" data-mode="month">Month</button>
+      <button type="button" class="seg-btn" data-mode="range">Date range</button>
+    </div>
+    <div id="modeMonth">
+      <label>Month
+        <select id="xMonth"></select>
+      </label>
+    </div>
+    <div id="modeRange" hidden>
+      <div class="row2">
+        <label>From <input type="text" id="xFrom" class="mask-date" inputmode="numeric" placeholder="DD.MM.YYYY" maxlength="10" autocomplete="off"></label>
+        <label>To <input type="text" id="xTo" class="mask-date" inputmode="numeric" placeholder="DD.MM.YYYY" maxlength="10" autocomplete="off"></label>
+      </div>
+    </div>
+    <label>Name on PDF (optional)
+      <input type="text" id="xName" maxlength="80" placeholder="Your name">
+    </label>
+    <div id="xSummary" class="calc"></div>
+    <div class="dlg-actions">
+      <span class="spacer"></span>
+      <button type="button" id="cancelExport" class="btn">Cancel</button>
+      <button type="submit" id="doExport" class="btn primary">Create PDF</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Menu dialog -->
+<dialog id="menuDlg">
+  <form method="dialog">
+    <h2 tabindex="-1" autofocus>Backup</h2>
+    <p class="muted small">Your entries are stored only on this device. Make a backup now and then (save it to Files or iCloud Drive).</p>
+    <button type="button" id="backupBtn" class="btn wide">Export backup (JSON)</button>
+    <button type="button" id="restoreBtn" class="btn wide">Import backup (JSON)</button>
+    <input type="file" id="restoreFile" accept="application/json,.json" hidden>
+    <p id="storageInfo" class="muted small"></p>
+    <div class="dlg-actions">
+      <span class="spacer"></span>
+      <button class="btn primary">Close</button>
+    </div>
+  </form>
+</dialog>
+
+<div id="toast" class="toast" role="status" hidden></div>
+
+<script src="vendor/jspdf.umd.min.js"></script>
+<script src="vendor/jspdf.plugin.autotable.min.js"></script>
+<script src="vendor/pdf-fonts.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
